@@ -3,19 +3,71 @@
  
 
 {% block content %}
-    <h1>Profile</h1>
-    {% for field in userprofile1 %}
-        <label for="avatar">Аватар</label>
-        <div class="avatar-container">
-            <img id="avatar-preview" src="{{ field.avatar.url }}" alt="Avatar" class="avatar" />
-            <input type="file" name="avatar" id="avatar" class="custom-file-input" onchange="previewAvatar(event)" />
-            <label class="custom-file-label1" for="avatar">Изменить</label>
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close-btn">&times;</span>
+            <form id="edit-profile-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Save changes</button>
+            </form>
         </div>
-        {{ field.username }}
-        {{ field.first_name }}
-        {{ field.last_name }}
-        {{ field.phone_number }}
-        {{ field.email }}
-        {{ field.password1 }}
-    {% endfor %}
+    </div>
+    <div id="profile-info">
+        <h2>Profile</h2>
+        <p>Email</p>
+        <p>Phone Number</p>
+        <p>Avatar:</p>
+        <!-- <img src="{{ user.userprofile1.avatar.url }}" alt="Avatar" width="150"> -->
+        <button id="edit-profile-btn" class="btn btn-primary">Edit Profile</button>
+    </div>
+
+
+
+    <script>
+        document.getElementById('edit-profile-btn').onclick = function() {
+            document.getElementById('edit-profile-modal').style.display = 'block';
+        };
+
+        document.getElementById('close-modal').onclick = function() {
+            document.getElementById('edit-profile-modal').style.display = 'none';
+        };
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('edit-profile-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        document.getElementById('edit-profile-form').onsubmit = function(event) {
+            event.preventDefault(); 
+        
+            let formData = new FormData(this);
+        
+            fetch("/profile/update/", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('profile-info').innerHTML = `
+                        <h2>Profile</h2>
+                        <p>Email: ${data.email}</p>
+                        <p>Phone Number: ${data.phone_number}</p>
+                        <img src="${data.avatar_url}" alt="Avatar" width="150">
+                        <button id="edit-profile-btn" class="btn btn-primary">Edit Profile</button>
+                    `;
+                    document.getElementById('edit-profile-modal').style.display = 'none';
+                } else {
+                    alert("Error updating profile");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        };
+    </script>
 {% endblock %}
+

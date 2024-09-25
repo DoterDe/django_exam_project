@@ -21,3 +21,8 @@ function previewAvatar(event) {
         reader.readAsDataURL(file);
     }
 }
+
+document.getElementById('edit-profile-btn').onclick = function() {
+    document.getElementById('edit-profile-modal').style.display = 'block';
+}
+

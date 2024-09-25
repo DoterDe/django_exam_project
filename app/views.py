@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
-from .forms import CreatePostForm , UserForm , FormLogin, FormReg , CodeForm,Register
+from .forms import CreatePostForm , UserForm , FormLogin, FormReg , CodeForm,Register , UserProfileForm
 from .models import UserProfile1,Product
 from django.views.generic.edit import CreateView, DeleteView
 from .serializers import ProductSerializers
@@ -115,10 +115,32 @@ def register(request, user_id):
 
 @login_required
 def profile_view(request):
-    user_profile = UserProfile1.objects.get(user=request.user)
-    return render(request, 'profile.html', {'userprofile1': user_profile})
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  
+    else:
+        form = UserProfileForm(instance=request.user)
+    
+    return render(request, 'profile.html', {'form': form})
 
-
+@login_required
+def profile_update_view(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            response_data = {
+                'success': True,
+                'first_name': request.user.first_name,
+                'email': request.user.email,
+                'phone_number': request.user.userprofile1.phone_number,
+                'avatar_url': request.user.userprofile1.avatar.url
+            }
+            return JsonResponse(response_data)
+        else:
+            return JsonResponse({'success': False})
 
 @permission_classes((IsAuthenticated,))
 class APIProductViewSet(ModelViewSet):

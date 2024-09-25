@@ -14,7 +14,7 @@ from django.contrib.staticfiles.views import serve
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.views import LogoutView
 from core.settings import DEBUG
-from app.views import register_and_login_view ,logout_student , enter_confirmation_code, register, profile_view
+from app.views import register_and_login_view ,logout_student , enter_confirmation_code, register, profile_view , profile_update_view
 
 router = DefaultRouter()
 router.register('product', APIProductViewSet)
@@ -38,7 +38,8 @@ urlpatterns = [
     path('register-and-login/', register_and_login_view, name='register_and_login'),
     path('register//<int:user_id>/',register, name='register' ),
     path('enter_confirmation_code/<int:user_id>/', enter_confirmation_code, name='enter_confirmation_code'),
-    path('profile/', profile_view , name='profile')
+    path('profile/', profile_view , name='profile'),
+    path('profile/update/', profile_update_view, name='profile_update'),
     # path('api/',APIProduct.as_view(), name='api' ),
     # path('api_id/<int:pk>/', APIProductDetail.as_view(), name='api_id')
 ]

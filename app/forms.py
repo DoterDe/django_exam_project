@@ -3,9 +3,25 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import UserProfile1
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserChangeForm
 
+class UserProfileForm(UserChangeForm):
+    class Meta:
+        model = UserProfile1
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'avatar' ]  
+        widgets = {
+            'username' : forms.TextInput(attrs={'class':'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'avatar': forms.FileInput(attrs={'class': 'form-control'}),
+            
+        }
 
-
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.fields['email'].disabled = True
 
 class Register(forms.ModelForm):
     first_name = forms.CharField(
