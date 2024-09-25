@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav>
+        <h1 class="navlogo">logo <img src="{% static 'img/golang_gopher_src_logo_icon_168155.webp' %}" alt="" class="logo"></h1>
+        <ul class="navul">
+            
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Log Out</button>
+                    </form>
+                </li>
+                
+
+            {% else %}
+                <li><a href="{% url 'register_and_login' %}">LOGIN</a> </li>
+            {% endif %}
+
+
+            <!-- <li><a href="">API</a></li>
+            <form method="post">
+                {% csrf_token %}
+                <p for="id_product">API_id:</p>
+                <input type="number" name="id_product">
+                <button type="submit">Submit</button>
+            </form> -->
+        </ul>
+    </nav>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        <div class="footer">  
+            <div class="row">
+                <ul class="footerul">
+                    <li><a href="#" class="txtfooter">Contact us</a></li>
+                    <li><a href="#" class="txtfooter">Our Services</a></li>
+                    <li><a href="#" class="txtfooter">Career</a></li>
+                </ul>
+            </div>
+        
+            <div class="row">
+            Lorem ipsum dolor sit © 2024 || Designed By: Suslik
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

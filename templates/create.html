@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+ 
+
+{% block content %}
+    <h1>Register</h1>
+    <div class="form">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Create</button>
+    </form> 
+
+    </div> 
+    <p class="h_ac">Already has an account? <a href="{%url 'login' %}">Login</a></p>
+{% endblock %}

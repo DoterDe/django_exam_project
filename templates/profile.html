@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+ 
+
+{% block content %}
+    <h1>Profile</h1>
+    {% for field in userprofile1 %}
+        <label for="avatar">Аватар</label>
+        <div class="avatar-container">
+            <img id="avatar-preview" src="{{ field.avatar.url }}" alt="Avatar" class="avatar" />
+            <input type="file" name="avatar" id="avatar" class="custom-file-input" onchange="previewAvatar(event)" />
+            <label class="custom-file-label1" for="avatar">Изменить</label>
+        </div>
+        {{ field.username }}
+        {{ field.first_name }}
+        {{ field.last_name }}
+        {{ field.phone_number }}
+        {{ field.email }}
+        {{ field.password1 }}
+    {% endfor %}
+{% endblock %}
